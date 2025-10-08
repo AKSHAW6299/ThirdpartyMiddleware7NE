@@ -2,6 +2,7 @@ import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 import rateLimit from 'express-rate-limit'
+import cookieParser from 'cookie-parser'
 const app = express()
 const port = 3000
 
@@ -21,10 +22,20 @@ const limiter = rateLimit({
 })
 app.use('/api/data', limiter)   // we are putting a limit for path => [/]
 
+// 4) cookie-parser
+app.use(cookieParser())
+
 
 app.get('/', (req, res) => {
+    res.cookie('cookie1', 'value1')
+    res.cookie('cookie2', 'value2')
     res.send('Hello World!')
 })
+
+app.get('/cookies', (req, res) => {
+    res.send(req.cookies)
+})
+
 app.get('/api/data', (req, res) => {
     res.json({ msg: 'Sample api response.' })
 })
