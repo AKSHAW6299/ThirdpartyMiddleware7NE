@@ -3,6 +3,7 @@ import morgan from 'morgan'
 import cors from 'cors'
 import rateLimit from 'express-rate-limit'
 import cookieParser from 'cookie-parser'
+import bodyParser from 'body-parser'
 const app = express()
 const port = 3000
 
@@ -22,11 +23,20 @@ const limiter = rateLimit({
 })
 app.use('/api/data', limiter)   // we are putting a limit for path => [/]
 
-// 4) cookie-parser
+// 4) Loading a 3rd party middleware [body-parser] to our app to use [req.body]
+// we can also use in-built middleware [express.json()] to use [req.body]
+app.use(bodyParser.json())
+
+// 5) cookie-parser
 app.use(cookieParser())
 
 
 app.get('/', (req, res) => {
+    console.log(req.body);    
+    res.send('Hello World!')
+})
+
+app.get('/test', (req, res) => {
     res.cookie('cookie1', 'value1')
     res.cookie('cookie2', 'value2')
     res.send('Hello World!')
